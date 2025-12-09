@@ -1,0 +1,10 @@
+ultralytics==8.1.0
+opencv-python==4.9.0.80
+onnxruntime==1.17.1
+requests==2.31.0
+python-dotenv==1.0.1
+PyYAML==6.0.1
+numpy==1.26.4
+
+# aiortc REMOVED because incompatible with Python 3.11 on Windows
+# If needed, install only on Python 3.9 manually
