@@ -1,0 +1,12 @@
+.venv/
+logs/
+src/logs/
+backend/backend_logs/
+__pycache__/
+*.pyc
+*.jsonl
+*.jpg
+*.zip
+*.pt
+*.onnx
+*.tflite
