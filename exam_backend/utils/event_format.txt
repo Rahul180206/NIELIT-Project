@@ -1,0 +1,20 @@
+{
+  "session_id": "ABC123",
+  "type": "eye_mouth",
+  "ear": 0.20,
+  "mar": 0.70,
+  "gaze": "left"
+}
+{
+  "session_id": "ABC123",
+  "type": "head_pose",
+  "yaw": 35,
+  "pitch": -2,
+  "roll": 5
+}
+{
+  "session_id": "ABC123",
+  "type": "object_detection",
+  "phone": true,
+  "persons": 2
+}

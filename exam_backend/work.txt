@@ -1,0 +1,38 @@
+WEEK 1 – BACKEND COMPLETED TASKS
+
+1. Project structure created
+2. Virtual environment setup
+3. Flask installed
+4. app.py created with base route
+5. Database file (db.sqlite3) created
+6. Database schema documented
+7. Empty model files created
+8. Empty route files created
+9. Event JSON formats prepared
+10. Placeholder APIs added
+11. Backend runs successfully
+
+
+WEEK2_BACKEND_SUMMARY.txt
+
+WEEK 2 – BACKEND INTEGRATION SUMMARY
+
+1. POST /event endpoint created
+2. event_parser implemented
+3. JSON parsing and validation added
+4. SQLAlchemy installed and configured
+5. database/db.py created (engine + Base)
+6. Three models created:
+   - Session
+   - Event
+   - Alert
+7. Tables auto-created inside db.sqlite3
+8. Session management implemented:
+   - /start_session inserts a session
+   - /end_session updates session status & end_time
+9. Event saving implemented:
+   - Saves incoming event JSON to events table
+10. Tested eye_mouth, head_pose, object_detection events
+11. Full flow tested:
+    start → events → end → DB correct
+12. Backend ready for Week 3 (rules engine)

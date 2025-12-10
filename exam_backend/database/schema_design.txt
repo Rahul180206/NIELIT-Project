@@ -1,0 +1,26 @@
+-----------------------------------
+DATABASE DESIGN (WEEK 1 - BACKEND)
+-----------------------------------
+
+1. SESSIONS TABLE
+session_id      TEXT
+user_id         TEXT
+start_time      TEXT
+end_time        TEXT
+cheating_score  INTEGER
+status          TEXT
+
+2. EVENTS TABLE
+event_id        INTEGER
+session_id      TEXT
+event_type      TEXT
+raw_data        TEXT
+timestamp       TEXT
+
+3. ALERTS TABLE
+alert_id        INTEGER
+session_id      TEXT
+alert_type      TEXT
+severity        INTEGER
+message         TEXT
+timestamp       TEXT
