@@ -1,0 +1,22 @@
+============================================================
+CHEATING DETECTION SESSION SUMMARY
+============================================================
+
+Session Duration: 982 frames
+Average Attention Score: 37.35%
+Minimum Attention Score: 0.00%
+Average Cheating Score: 105.79
+Maximum Cheating Score: 137.91
+
+Event Summary:
+  - Looking Down: 632 times
+  - Head Tilted: 132 times
+  - Eyes Looking Left: 86 times
+  - Looking Left: 78 times
+  - WARNING: Looking Away > 3s: 11 times
+  - CRITICAL: Looking Away > 7s: 7 times
+  - Phone Detected!: 4 times
+  - SEVERE: Looking Away > 15s: 3 times
+  - Multiple Faces!: 2 times
+  - Mouth Open: 1 times
+  - Eyes Looking Right: 1 times
