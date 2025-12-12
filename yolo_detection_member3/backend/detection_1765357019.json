@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-12-10T08:56:59.243815Z",
+  "event_type": "multiple_persons",
+  "frame_idx": null,
+  "image_path": "D:\\yolo_detection_member3\\src\\..\\evidence\\multiple_persons_20251210_142659_f7b9e0.jpg",
+  "detections": [
+    {
+      "class": "person",
+      "confidence": 0.8914092183113098,
+      "box": [
+        0.0,
+        131.64437866210938,
+        400.637451171875,
+        475.8229064941406
+      ]
+    },
+    {
+      "class": "person",
+      "confidence": 0.799296498298645,
+      "box": [
+        393.8027648925781,
+        156.52127075195312,
+        640.0,
+        474.30780029296875
+      ]
+    }
+  ],
+  "extra": {}
+}

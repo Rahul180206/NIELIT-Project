@@ -1,0 +1,11 @@
+ultralytics>=8.0.0
+opencv-python>=4.7
+numpy
+onnx>=1.14
+onnxruntime
+torch>=2.0.0
+supervision
+flask
+pyyaml
+tqdm
+roboflow

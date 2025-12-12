@@ -1,0 +1,14 @@
+train: D:/yolo_detection_member3/datasets/earphone/train/images
+val: D:/yolo_detection_member3/datasets/earphone/valid/images
+
+# total classes
+nc: 6
+
+# class names
+names:
+  - earphone       # custom class
+  - person         # COCO
+  - cell phone     # COCO
+  - laptop         # COCO
+  - book           # COCO
+  - tv             # COCO
