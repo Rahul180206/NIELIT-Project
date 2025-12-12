@@ -1,0 +1,39 @@
+{
+  "timestamp": "2025-12-12T08:32:30.832994Z",
+  "event_type": "multiple_persons",
+  "frame_idx": null,
+  "image_path": "E:\\New folder\\NIELIT-Project\\yolo_detection_member3\\src\\..\\evidence\\multiple_persons_20251212_140230_408ef6.jpg",
+  "detections": [
+    {
+      "class": "person",
+      "confidence": 0.7115446329116821,
+      "box": [
+        127.0,
+        200.0,
+        473.0,
+        479.0
+      ]
+    },
+    {
+      "class": "person",
+      "confidence": 0.5847080945968628,
+      "box": [
+        521.0,
+        378.0,
+        604.0,
+        479.0
+      ]
+    },
+    {
+      "class": "person",
+      "confidence": 0.32840943336486816,
+      "box": [
+        10.0,
+        104.0,
+        194.0,
+        480.0
+      ]
+    }
+  ],
+  "extra": {}
+}

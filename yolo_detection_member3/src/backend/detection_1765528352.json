@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-12-12T08:32:32.360807Z",
+  "event_type": "phone_detected",
+  "frame_idx": null,
+  "image_path": "E:\\New folder\\NIELIT-Project\\yolo_detection_member3\\src\\..\\evidence\\phone_detected_20251212_140232_9548e1.jpg",
+  "detections": [
+    {
+      "class": "person",
+      "confidence": 0.861135721206665,
+      "box": [
+        62.0,
+        201.0,
+        473.0,
+        479.0
+      ]
+    },
+    {
+      "class": "cell phone",
+      "confidence": 0.28793099522590637,
+      "box": [
+        188.0,
+        346.0,
+        227.0,
+        388.0
+      ]
+    }
+  ],
+  "extra": {}
+}
