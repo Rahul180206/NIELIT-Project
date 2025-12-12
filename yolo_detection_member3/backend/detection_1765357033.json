@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-12-10T08:57:13.987875Z",
+  "event_type": "phone_detected",
+  "frame_idx": null,
+  "image_path": "D:\\yolo_detection_member3\\src\\..\\evidence\\phone_detected_20251210_142713_64f0b1.jpg",
+  "detections": [
+    {
+      "class": "person",
+      "confidence": 0.8129162788391113,
+      "box": [
+        128.2382354736328,
+        91.4612808227539,
+        640.0,
+        474.58221435546875
+      ]
+    },
+    {
+      "class": "cell phone",
+      "confidence": 0.35465896129608154,
+      "box": [
+        168.49603271484375,
+        186.96697998046875,
+        331.54498291015625,
+        468.53369140625
+      ]
+    }
+  ],
+  "extra": {}
+}

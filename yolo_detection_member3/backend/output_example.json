@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-12-10T12:34:56.789Z",
+  "event_type": "phone_detected",
+  "frame_idx": 1234,
+  "image_path": "evidence/phone_detected_20251210_123456_a1b2c3.jpg",
+  "detections": [
+    {
+      "class": "cellphone",
+      "confidence": 0.87,
+      "box": [100.0, 120.0, 200.0, 260.0]
+    },
+    {
+      "class": "person",
+      "confidence": 0.92,
+      "box": [20.0, 30.0, 420.0, 760.0]
+    }
+  ],
+  "extra": {}
+}

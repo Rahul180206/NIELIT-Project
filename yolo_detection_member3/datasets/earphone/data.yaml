@@ -1,0 +1,5 @@
+train: D:/yolo_detection_member3/datasets/multi/train/images
+val: D:/yolo_detection_member3/datasets/multi/valid/images
+
+nc: 1
+names: ["earphone"]
