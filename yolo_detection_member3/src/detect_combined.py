@@ -21,9 +21,19 @@ COCO_CLASSES = {
     62: 'tv'
 }
 
+# Colors for each class (BGR format)
+CLASS_COLORS = {
+    'person': (0, 255, 0),      # Green
+    'cell phone': (0, 0, 255),  # Red
+    'laptop': (255, 0, 0),      # Blue
+    'book': (0, 255, 255),      # Yellow
+    'tv': (255, 0, 255),        # Magenta
+    'earphone': (255, 165, 0)   # Orange
+}
+
 def detect_combined(earphone_model_path, source, show=True, save=False, conf=0.3):
     # Create evidence directory if it doesn't exist
-    evidence_dir = "../evidence"
+    evidence_dir = "evidence" if os.path.exists("evidence") else "../evidence"
     os.makedirs(evidence_dir, exist_ok=True)
     print(f"[INFO] Evidence will be saved to: {os.path.abspath(evidence_dir)}")
     print("[INFO] Loading models...")
@@ -98,13 +108,16 @@ def detect_combined(earphone_model_path, source, show=True, save=False, conf=0.3
                             # Get bounding box coordinates
                             x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                             
+                            # Get color for this class
+                            color = CLASS_COLORS.get(class_name, (0, 255, 0))
+                            
                             # Draw bounding box
-                            cv2.rectangle(annotated_frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
+                            cv2.rectangle(annotated_frame, (int(x1), int(y1)), (int(x2), int(y2)), color, 2)
                             
                             # Draw label
                             label = f"{class_name}: {conf_score:.2f}"
                             cv2.putText(annotated_frame, label, (int(x1), int(y1-10)), 
-                                      cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                                      cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
                             
                             print(f"[DETECTION] {class_name}: {conf_score:.2f}")
             
@@ -118,13 +131,16 @@ def detect_combined(earphone_model_path, source, show=True, save=False, conf=0.3
                         # Get bounding box coordinates
                         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                         
-                        # Draw bounding box (blue for earphones)
-                        cv2.rectangle(annotated_frame, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
+                        # Get color for earphone
+                        color = CLASS_COLORS['earphone']
+                        
+                        # Draw bounding box
+                        cv2.rectangle(annotated_frame, (int(x1), int(y1)), (int(x2), int(y2)), color, 2)
                         
                         # Draw label
                         label = f"earphone: {conf_score:.2f}"
                         cv2.putText(annotated_frame, label, (int(x1), int(y1-10)), 
-                                  cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+                                  cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
                         
                         print(f"[DETECTION] earphone: {conf_score:.2f}")
                         prohibited_items.append('earphone')
