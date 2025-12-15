@@ -1,0 +1,1277 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cheat Detector System</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f4e4d7 0%, #e8d5c4 100%);
+      min-height: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    .page {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    .header {
+      padding: 20px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #8b6f47;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-btn {
+      padding: 12px 30px;
+      border: 2px solid #8b6f47;
+      background: transparent;
+      color: #8b6f47;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 5px;
+    }
+
+    .nav-btn:hover {
+      background: #8b6f47;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(139, 111, 71, 0.3);
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      border-color: #e74c3c;
+      color: white;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+      border-color: #c0392b;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 50px;
+      text-align: center;
+      overflow-y: auto;
+    }
+
+    .title {
+      font-size: 72px;
+      font-weight: bold;
+      color: #6b4423;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .subtitle {
+      font-size: 24px;
+      color: #8b6f47;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    .description {
+      font-size: 18px;
+      color: #a0826d;
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .detection-circle {
+      position: absolute;
+      border: 3px solid #8b6f47;
+      border-radius: 50%;
+      animation: detect 2s ease-out infinite;
+    }
+
+    @keyframes detect {
+      0% {
+        width: 50px;
+        height: 50px;
+        opacity: 1;
+      }
+      100% {
+        width: 200px;
+        height: 200px;
+        opacity: 0;
+      }
+    }
+
+    .detection-wrapper {
+      position: relative;
+      display: inline-block;
+      margin: 30px 0;
+    }
+
+    /* Login Page Styles */
+    .login-page {
+      background: linear-gradient(135deg, #f4e4d7 0%, #e8d5c4 100%);
+    }
+
+    .login-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 50px;
+    }
+
+    .login-container {
+      background: white;
+      padding: 50px;
+      border-radius: 15px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .login-title {
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .login-subtitle {
+      font-size: 16px;
+      color: #666;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: #f9f9f9;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #8b6f47;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.1);
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .input-error {
+      border-color: #e74c3c !important;
+    }
+
+    .login-btn, .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #8b6f47 0%, #6b4423 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover, .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(139, 111, 71, 0.4);
+    }
+
+    /* Session Allocation */
+    .session-form {
+      background: rgba(255, 255, 255, 0.6);
+      padding: 50px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .page-title {
+      font-size: 42px;
+      color: #6b4423;
+      text-align: center;
+      margin-bottom: 40px;
+      font-weight: bold;
+    }
+
+    .duration-display {
+      width: 100%;
+      padding: 15px;
+      background: rgba(139, 111, 71, 0.1);
+      border: 2px solid #d4c4b0;
+      border-radius: 8px;
+      font-size: 18px;
+      color: #6b4423;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .start-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #8b6f47 0%, #6b4423 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(139, 111, 71, 0.4);
+    }
+
+    .start-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Camera Page */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .session-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: #8b6f47;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .info-value {
+      font-size: 20px;
+      color: #6b4423;
+      font-weight: bold;
+    }
+
+    .camera-container {
+      background: rgba(255, 255, 255, 0.6);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .camera-title {
+      font-size: 32px;
+      color: #6b4423;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    #videoElement {
+      width: 100%;
+      max-width: 640px;
+      height: auto;
+      border-radius: 10px;
+      border: 3px solid #8b6f47;
+      display: none;
+      margin: 0 auto 20px;
+    }
+
+    .camera-placeholder {
+      width: 100%;
+      max-width: 640px;
+      height: 480px;
+      background: rgba(139, 111, 71, 0.1);
+      border: 3px dashed #8b6f47;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 18px;
+      color: #8b6f47;
+    }
+
+    .camera-btn {
+      padding: 18px 50px;
+      background: linear-gradient(135deg, #8b6f47 0%, #6b4423 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .camera-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(139, 111, 71, 0.4);
+    }
+
+    .camera-btn.stop {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .camera-status {
+      margin-top: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .camera-status.active {
+      background: rgba(46, 204, 113, 0.2);
+      color: #27ae60;
+      border: 2px solid #27ae60;
+    }
+
+    .camera-status.inactive {
+      background: rgba(231, 76, 60, 0.2);
+      color: #c0392b;
+      border: 2px solid #e74c3c;
+    }
+
+    .warning-box {
+      background: rgba(231, 76, 60, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #e74c3c;
+      max-width: 800px;
+      width: 100%;
+      text-align: left;
+    }
+
+    .warning-box p {
+      color: #c0392b;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    /* Student Performance */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.6);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .stat-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #6b4423;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #8b6f47;
+      font-weight: 600;
+    }
+
+    .students-section {
+      background: rgba(255, 255, 255, 0.5);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      color: #6b4423;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .student-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .student-item {
+      background: white;
+      padding: 20px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 4px solid #8b6f47;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .student-item:hover {
+      transform: translateX(10px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #6b4423;
+    }
+
+    .camera-badge {
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .camera-badge.on {
+      background: rgba(46, 204, 113, 0.2);
+      color: #27ae60;
+    }
+
+    .camera-badge.off {
+      background: rgba(231, 76, 60, 0.2);
+      color: #c0392b;
+    }
+
+    .student-details {
+      display: none;
+      margin-top: 20px;
+      padding: 25px;
+      background: rgba(139, 111, 71, 0.05);
+      border-radius: 8px;
+      border: 2px solid rgba(139, 111, 71, 0.2);
+    }
+
+    .student-details.show {
+      display: block;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .detail-box {
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .detail-box-label {
+      font-size: 12px;
+      color: #8b6f47;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .detail-box-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #6b4423;
+    }
+
+    .activities-section {
+      margin-top: 20px;
+    }
+
+    .activities-title {
+      font-size: 18px;
+      color: #6b4423;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .activity-item {
+      padding: 15px 20px;
+      background: white;
+      border-radius: 6px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .activity-item.error {
+      border-left: 4px solid #e74c3c;
+      color: #c0392b;
+    }
+
+    .activity-item.warning {
+      border-left: 4px solid #f39c12;
+      color: #d68910;
+    }
+
+    .activity-item.info {
+      border-left: 4px solid #3498db;
+      color: #2980b9;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .title {
+        font-size: 48px;
+      }
+      
+      .main-content {
+        padding: 30px 20px;
+      }
+      
+      .login-container, .session-form {
+        padding: 30px 20px;
+      }
+      
+      .camera-placeholder {
+        height: 300px;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!-- HOME PAGE -->
+  <div id="homePage" class="page active">
+   <header class="header">
+    <div class="logo">
+     🎯 CheatGuard
+    </div>
+    <nav class="nav-buttons"><button class="nav-btn" onclick="navigateTo('home')">Home</button> <button class="nav-btn" onclick="navigateTo('login')">Login</button>
+    </nav>
+   </header>
+   <main class="main-content">
+    <div class="detection-wrapper">
+     <h1 class="title">CHEAT DETECTOR</h1>
+     <div class="detection-circle" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+    </div>
+    <p class="subtitle">The Best Cheat Detection Portal</p>
+    <p class="description">Advanced AI-powered monitoring system for secure online examinations</p>
+    <p class="description">Real-time surveillance • Intelligent analysis • Comprehensive reporting</p>
+    <p class="description">Ensuring academic integrity with cutting-edge technology</p>
+   </main>
+  </div><!-- LOGIN PAGE -->
+  <div id="loginPage" class="page login-page">
+   <header class="header">
+    <div class="logo">
+     🎯 CheatGuard
+    </div>
+    <nav class="nav-buttons"><button class="nav-btn" onclick="navigateTo('home')">Home</button>
+    </nav>
+   </header>
+   <div class="login-wrapper">
+    <div class="login-container">
+     <div class="login-header">
+      <h1 class="login-title">Welcome Back</h1>
+      <p class="login-subtitle">Sign in to continue to CheatGuard</p>
+     </div>
+     <form id="loginForm">
+      <div class="form-group"><label for="username">Username</label> <input type="text" id="username" name="username" placeholder="Enter your username" required>
+       <div class="error-message" id="usernameError">
+        Username is required
+       </div>
+      </div>
+      <div class="form-group"><label for="email">Email</label> <input type="email" id="email" name="email" placeholder="Enter your email" required>
+       <div class="error-message" id="emailError">
+        Please enter a valid email address
+       </div>
+      </div>
+      <div class="form-group"><label for="password">Password</label> <input type="password" id="password" name="password" placeholder="Enter your password" required>
+       <div class="error-message" id="passwordError">
+        Password is incorrect
+       </div>
+      </div>
+      <div class="form-group"><label for="role">Role</label> <select id="role" name="role" required> <option value="">Select your role</option> <option value="teacher">Teacher</option> <option value="student">Student</option> </select>
+       <div class="error-message" id="roleError">
+        Please select a role
+       </div>
+      </div><button type="submit" class="login-btn">Login</button>
+     </form>
+    </div>
+   </div>
+  </div><!-- SESSION ALLOCATION PAGE (Teacher) -->
+  <div id="sessionPage" class="page">
+   <header class="header">
+    <div class="logo">
+     🎯 CheatGuard
+    </div>
+    <nav class="nav-buttons"><button class="nav-btn" onclick="navigateTo('home')">Home</button> <button class="nav-btn logout-btn" onclick="logout()">Logout</button>
+    </nav>
+   </header>
+   <main class="main-content">
+    <h1 class="page-title">Create New Session</h1>
+    <form class="session-form" id="sessionForm">
+     <div class="form-group"><label for="startTime">Start Time</label> <input type="datetime-local" id="startTime" name="startTime" required>
+     </div>
+     <div class="form-group"><label for="endTime">End Time</label> <input type="datetime-local" id="endTime" name="endTime" required>
+     </div>
+     <div class="form-group"><label for="duration">Duration (Automatically Calculated)</label>
+      <div class="duration-display" id="duration">
+       Please select start and end times
+      </div>
+     </div><button type="submit" class="start-btn" id="startBtn" disabled>Start Session</button>
+    </form>
+   </main>
+  </div><!-- CAMERA PAGE (Student) -->
+  <div id="cameraPage" class="page">
+   <header class="header">
+    <div class="top-nav" style="width: 100%;">
+     <div class="logo">
+      🎯 CheatGuard
+     </div>
+     <nav class="nav-buttons"><button class="nav-btn" onclick="navigateTo('home')">Home</button> <button class="nav-btn logout-btn" onclick="logout()">Logout</button>
+     </nav>
+    </div>
+    <div class="session-info" style="width: 100%; margin-top: 20px;">
+     <div class="info-item"><span class="info-label">Session Start</span> <span class="info-value" id="studentSessionStart">--:--</span>
+     </div>
+     <div class="info-item"><span class="info-label">Session End</span> <span class="info-value" id="studentSessionEnd">--:--</span>
+     </div>
+     <div class="info-item"><span class="info-label">Duration</span> <span class="info-value" id="studentSessionDuration">-- minutes</span>
+     </div>
+     <div class="info-item"><span class="info-label">Time Remaining</span> <span class="info-value" id="timeRemaining">--:--</span>
+     </div>
+    </div>
+   </header>
+   <main class="main-content">
+    <div class="camera-container">
+     <h1 class="camera-title">Examination Camera</h1>
+     <div class="camera-placeholder" id="cameraPlaceholder">
+      📹 Camera will appear here
+     </div>
+     <video id="videoElement" autoplay playsinline></video><button class="camera-btn" id="cameraBtn">Start Camera</button>
+     <div class="camera-status inactive" id="cameraStatus">
+      🔴 Camera is OFF
+     </div>
+    </div>
+    <div class="warning-box">
+     <p>⚠️ IMPORTANT INSTRUCTIONS:</p>
+     <p>• Keep your camera ON throughout the entire examination period</p>
+     <p>• Turning off the camera multiple times will be reported to your instructor</p>
+     <p>• Your face must be clearly visible at all times</p>
+     <p>• Avoid looking away from the screen or using your phone</p>
+     <p>• Any suspicious activity will be recorded and flagged</p>
+    </div>
+   </main>
+  </div><!-- STUDENT PERFORMANCE PAGE (Teacher) -->
+  <div id="performancePage" class="page">
+   <header class="header">
+    <div class="logo">
+     🎯 CheatGuard
+    </div>
+    <nav class="nav-buttons"><button class="nav-btn" onclick="navigateTo('home')">Home</button> <button class="nav-btn" onclick="navigateTo('session')">New Session</button> <button class="nav-btn logout-btn" onclick="logout()">Logout</button>
+    </nav>
+   </header>
+   <main class="main-content" style="align-items: flex-start; padding: 40px 50px;">
+    <h1 class="page-title" style="width: 100%;">Student Performance Monitor</h1>
+    <div class="stats-grid">
+     <div class="stat-card">
+      <div class="stat-icon">
+       👥
+      </div>
+      <div class="stat-value" id="totalStudents">
+       0
+      </div>
+      <div class="stat-label">
+       Total Students
+      </div>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon">
+       🟢
+      </div>
+      <div class="stat-value" id="cameraOn">
+       0
+      </div>
+      <div class="stat-label">
+       Camera ON
+      </div>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon">
+       🔴
+      </div>
+      <div class="stat-value" id="cameraOff">
+       0
+      </div>
+      <div class="stat-label">
+       Camera OFF
+      </div>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon">
+       ⚠️
+      </div>
+      <div class="stat-value" id="violations">
+       0
+      </div>
+      <div class="stat-label">
+       Total Violations
+      </div>
+     </div>
+    </div>
+    <div class="students-section">
+     <h2 class="section-title">Student List (Click on a name to view details)</h2>
+     <div class="student-list" id="studentList"><!-- Students will be populated here -->
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+    let currentPage = 'home';
+    let userRole = null;
+    let sessionData = {};
+    let videoStream = null;
+    let cameraActive = false;
+
+    function navigateTo(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      
+      if (page === 'home') {
+        document.getElementById('homePage').classList.add('active');
+      } else if (page === 'login') {
+        document.getElementById('loginPage').classList.add('active');
+      } else if (page === 'session') {
+        if (userRole === 'teacher') {
+          document.getElementById('sessionPage').classList.add('active');
+        } else {
+          navigateTo('login');
+        }
+      } else if (page === 'camera') {
+        if (userRole === 'student') {
+          document.getElementById('cameraPage').classList.add('active');
+          updateStudentSessionInfo();
+        } else {
+          navigateTo('login');
+        }
+      } else if (page === 'performance') {
+        if (userRole === 'teacher') {
+          document.getElementById('performancePage').classList.add('active');
+          populateStudentPerformance();
+        } else {
+          navigateTo('login');
+        }
+      }
+      
+      currentPage = page;
+    }
+
+    function logout() {
+      userRole = null;
+      sessionData = {};
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+        videoStream = null;
+        cameraActive = false;
+      }
+      navigateTo('home');
+    }
+
+    // Login Form Handler
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+
+      const validCredentials = {
+        'teacher@example.com': 'teacher123',
+        'student@example.com': 'student123'
+      };
+
+      let isValid = true;
+
+      document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('input, select').forEach(el => el.classList.remove('input-error'));
+
+      if (!username.trim()) {
+        document.getElementById('usernameError').classList.add('show');
+        document.getElementById('username').classList.add('input-error');
+        isValid = false;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.trim()) {
+        document.getElementById('emailError').textContent = 'Email is required';
+        document.getElementById('emailError').classList.add('show');
+        document.getElementById('email').classList.add('input-error');
+        isValid = false;
+      } else if (!emailRegex.test(email)) {
+        document.getElementById('emailError').textContent = 'Please enter a valid email address';
+        document.getElementById('emailError').classList.add('show');
+        document.getElementById('email').classList.add('input-error');
+        isValid = false;
+      }
+
+      if (!password.trim()) {
+        document.getElementById('passwordError').textContent = 'Password is required';
+        document.getElementById('passwordError').classList.add('show');
+        document.getElementById('password').classList.add('input-error');
+        isValid = false;
+      }
+
+      if (!role) {
+        document.getElementById('roleError').classList.add('show');
+        document.getElementById('role').classList.add('input-error');
+        isValid = false;
+      }
+
+      if (isValid) {
+        userRole = role;
+        
+        if (role === 'teacher') {
+          navigateTo('session');
+        } else if (role === 'student') {
+          navigateTo('camera');
+        }
+      }
+    });
+
+    // Session Form Handler
+    const startTimeInput = document.getElementById('startTime');
+    const endTimeInput = document.getElementById('endTime');
+    const durationDisplay = document.getElementById('duration');
+    const startBtn = document.getElementById('startBtn');
+
+    function calculateDuration() {
+      const startTime = new Date(startTimeInput.value);
+      const endTime = new Date(endTimeInput.value);
+
+      if (startTimeInput.value && endTimeInput.value) {
+        if (endTime <= startTime) {
+          durationDisplay.textContent = 'End time must be after start time';
+          durationDisplay.style.color = '#e74c3c';
+          startBtn.disabled = true;
+          return;
+        }
+
+        const diffMs = endTime - startTime;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        let durationText = '';
+        if (diffHours > 0) {
+          durationText += `${diffHours} hour${diffHours > 1 ? 's' : ''}`;
+        }
+        if (diffMinutes > 0) {
+          if (durationText) durationText += ' ';
+          durationText += `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''}`;
+        }
+
+        durationDisplay.textContent = durationText || '0 minutes';
+        durationDisplay.style.color = '#6b4423';
+        startBtn.disabled = false;
+      } else {
+        durationDisplay.textContent = 'Please select start and end times';
+        durationDisplay.style.color = '#6b4423';
+        startBtn.disabled = true;
+      }
+    }
+
+    startTimeInput.addEventListener('change', calculateDuration);
+    endTimeInput.addEventListener('change', calculateDuration);
+
+    document.getElementById('sessionForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      sessionData = {
+        startTime: startTimeInput.value,
+        endTime: endTimeInput.value,
+        duration: durationDisplay.textContent
+      };
+      
+      navigateTo('performance');
+    });
+
+    // Camera Functions
+    const videoElement = document.getElementById('videoElement');
+    const cameraBtn = document.getElementById('cameraBtn');
+    const cameraStatus = document.getElementById('cameraStatus');
+    const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+
+    async function startCamera() {
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({ 
+          video: { width: 640, height: 480 }, 
+          audio: false 
+        });
+        
+        videoElement.srcObject = videoStream;
+        videoElement.style.display = 'block';
+        cameraPlaceholder.style.display = 'none';
+        cameraActive = true;
+        
+        cameraBtn.textContent = 'Stop Camera';
+        cameraBtn.classList.add('stop');
+        cameraStatus.textContent = '🟢 Camera is ON';
+        cameraStatus.classList.remove('inactive');
+        cameraStatus.classList.add('active');
+        
+      } catch (error) {
+        cameraPlaceholder.textContent = '❌ Camera access denied. Please allow camera permissions.';
+      }
+    }
+
+    function stopCamera() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+        videoElement.srcObject = null;
+        videoElement.style.display = 'none';
+        cameraPlaceholder.style.display = 'flex';
+        cameraPlaceholder.textContent = '📹 Camera stopped';
+        cameraActive = false;
+        
+        cameraBtn.textContent = 'Start Camera';
+        cameraBtn.classList.remove('stop');
+        cameraStatus.textContent = '🔴 Camera is OFF';
+        cameraStatus.classList.remove('active');
+        cameraStatus.classList.add('inactive');
+      }
+    }
+
+    cameraBtn.addEventListener('click', function() {
+      if (cameraActive) {
+        stopCamera();
+      } else {
+        startCamera();
+      }
+    });
+
+    function updateStudentSessionInfo() {
+      if (sessionData.startTime && sessionData.endTime) {
+        const startTime = new Date(sessionData.startTime);
+        const endTime = new Date(sessionData.endTime);
+        
+        document.getElementById('studentSessionStart').textContent = startTime.toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        document.getElementById('studentSessionEnd').textContent = endTime.toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        document.getElementById('studentSessionDuration').textContent = sessionData.duration;
+        
+        function updateRemainingTime() {
+          const now = new Date();
+          const diff = endTime - now;
+          
+          if (diff <= 0) {
+            document.getElementById('timeRemaining').textContent = 'Session Ended';
+            return;
+          }
+          
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          
+          document.getElementById('timeRemaining').textContent = 
+            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        updateRemainingTime();
+        setInterval(updateRemainingTime, 1000);
+      } else {
+        document.getElementById('studentSessionStart').textContent = 'Not Set';
+        document.getElementById('studentSessionEnd').textContent = 'Not Set';
+        document.getElementById('studentSessionDuration').textContent = 'Not Set';
+        document.getElementById('timeRemaining').textContent = 'Not Set';
+      }
+    }
+
+    // Student Performance
+    function populateStudentPerformance() {
+      const students = [
+        {
+          id: 1,
+          name: 'Alice Johnson',
+          cameraOn: true,
+          cameraOffCount: 2,
+          totalTime: '45 minutes',
+          cameraOffTime: '5 minutes',
+          violations: [
+            { type: 'warning', text: 'Looking away from screen (3 times)' },
+            { type: 'error', text: 'Phone detected (1 time)' },
+            { type: 'info', text: 'Camera turned off (2 times)' }
+          ]
+        },
+        {
+          id: 2,
+          name: 'Bob Smith',
+          cameraOn: true,
+          cameraOffCount: 0,
+          totalTime: '45 minutes',
+          cameraOffTime: '0 minutes',
+          violations: [
+            { type: 'info', text: 'No violations detected' }
+          ]
+        },
+        {
+          id: 3,
+          name: 'Carol Williams',
+          cameraOn: false,
+          cameraOffCount: 5,
+          totalTime: '40 minutes',
+          cameraOffTime: '15 minutes',
+          violations: [
+            { type: 'error', text: 'Multiple people detected (2 times)' },
+            { type: 'warning', text: 'Looking away from screen (5 times)' },
+            { type: 'error', text: 'Phone detected (2 times)' },
+            { type: 'info', text: 'Camera turned off (5 times)' }
+          ]
+        },
+        {
+          id: 4,
+          name: 'David Brown',
+          cameraOn: true,
+          cameraOffCount: 1,
+          totalTime: '45 minutes',
+          cameraOffTime: '2 minutes',
+          violations: [
+            { type: 'warning', text: 'Looking away from screen (1 time)' },
+            { type: 'info', text: 'Camera turned off (1 time)' }
+          ]
+        },
+        {
+          id: 5,
+          name: 'Emma Davis',
+          cameraOn: false,
+          cameraOffCount: 3,
+          totalTime: '42 minutes',
+          cameraOffTime: '8 minutes',
+          violations: [
+            { type: 'error', text: 'Phone detected (1 time)' },
+            { type: 'warning', text: 'Looking away from screen (4 times)' },
+            { type: 'info', text: 'Camera turned off (3 times)' }
+          ]
+        }
+      ];
+
+      document.getElementById('totalStudents').textContent = students.length;
+      document.getElementById('cameraOn').textContent = students.filter(s => s.cameraOn).length;
+      document.getElementById('cameraOff').textContent = students.filter(s => !s.cameraOn).length;
+      
+      let totalViolations = 0;
+      students.forEach(student => {
+        totalViolations += student.violations.filter(v => v.type !== 'info').length;
+      });
+      document.getElementById('violations').textContent = totalViolations;
+
+      const studentList = document.getElementById('studentList');
+      studentList.innerHTML = '';
+      
+      students.forEach(student => {
+        const studentWrapper = document.createElement('div');
+        
+        const studentItem = document.createElement('div');
+        studentItem.className = 'student-item';
+        studentItem.innerHTML = `
+          <div class="student-name">${student.name}</div>
+          <div class="camera-badge ${student.cameraOn ? 'on' : 'off'}">
+            ${student.cameraOn ? '🟢 Camera ON' : '🔴 Camera OFF'}
+          </div>
+        `;
+        
+        const studentDetails = document.createElement('div');
+        studentDetails.className = 'student-details';
+        studentDetails.id = `details-${student.id}`;
+        studentDetails.innerHTML = `
+          <div class="detail-grid">
+            <div class="detail-box">
+              <div class="detail-box-label">Total Active Time</div>
+              <div class="detail-box-value">${student.totalTime}</div>
+            </div>
+            <div class="detail-box">
+              <div class="detail-box-label">Camera OFF Time</div>
+              <div class="detail-box-value">${student.cameraOffTime}</div>
+            </div>
+            <div class="detail-box">
+              <div class="detail-box-label">Camera OFF Count</div>
+              <div class="detail-box-value">${student.cameraOffCount}</div>
+            </div>
+            <div class="detail-box">
+              <div class="detail-box-label">Violation Count</div>
+              <div class="detail-box-value">${student.violations.filter(v => v.type !== 'info').length}</div>
+            </div>
+          </div>
+          <div class="activities-section">
+            <div class="activities-title">📊 Detected Activities</div>
+            <div class="activity-list">
+              ${student.violations.map(violation => `
+                <div class="activity-item ${violation.type}">
+                  <span>${violation.type === 'error' ? '❌' : violation.type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+                  <span>${violation.text}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        
+        studentItem.addEventListener('click', function() {
+          studentDetails.classList.toggle('show');
+        });
+        
+        studentWrapper.appendChild(studentItem);
+        studentWrapper.appendChild(studentDetails);
+        studentList.appendChild(studentWrapper);
+      });
+    }
+
+    const defaultConfig = {};
+
+    async function onConfigChange(config) {}
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map();
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9abac6a2c50d54e4',t:'MTc2NTM0OTA5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
